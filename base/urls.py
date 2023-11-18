@@ -12,4 +12,6 @@ urlpatterns = [
     path('settings', views.settings, name="settings"),
 
     path('upload', views.upload, name="upload"),
+
+    path('like-post/<str:id>', views.like_post, name="like-post"),
 ]

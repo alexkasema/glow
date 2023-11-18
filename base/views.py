@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 
 from django.contrib.auth.decorators import login_required
 
-from . models import Profile, Post
+from . models import Profile, Post, LikePost
 
 from django.contrib import messages #! for flash messages
 from django.http import HttpResponse
@@ -119,3 +119,26 @@ def upload(request):
         return redirect('index')
     else:
         return redirect('index')
+
+@login_required(login_url='signin')
+def like_post(request, id):
+
+    username = request.user.username
+    post = Post.objects.get(id=id)
+
+    like_filter = LikePost.objects.filter(post_id=id, username=username).first() #! gets the first instance of post
+
+    if like_filter == None:
+        new_like = LikePost.objects.create(post_id=id, username=username)
+        new_like.save()
+        post.no_of_likes += 1
+        post.save()
+        return redirect('index')
+    else:
+        like_filter.delete()
+        post.no_of_likes -= 1
+        post.save()
+        return redirect('index')
+
+
+    return HttpResponse('Liked post')
