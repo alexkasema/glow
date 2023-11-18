@@ -10,6 +10,7 @@ urlpatterns = [
     path('logout', views.logoutUser, name="logout"),
 
     path('settings', views.settings, name="settings"),
+    path('profile/<str:pk>/', views.profile, name="profile"),
 
     path('upload', views.upload, name="upload"),
 

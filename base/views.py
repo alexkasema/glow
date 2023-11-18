@@ -107,6 +107,21 @@ def settings(request):
     return render(request, 'setting.html', context)
 
 @login_required(login_url='signin')
+def profile(request, pk):
+
+    user_object = User.objects.get(username=pk)
+    user_profile = Profile.objects.get(user=user_object)
+
+    user_posts = Post.objects.filter(user=pk)
+    user_posts_len = len(user_posts)
+
+    context = {
+        'user_object': user_object, 'user_posts': user_posts, 
+        'user_posts_len': user_posts_len, 'user_profile': user_profile
+    }
+    return render(request, 'profile.html', context)
+
+@login_required(login_url='signin')
 def upload(request):
 
     if request.method == 'POST':
