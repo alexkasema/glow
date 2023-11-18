@@ -36,3 +36,10 @@ class LikePost(models.Model):
 
     def __str__(self) -> str:
         return self.username
+    
+class FollowersCount(models.Model):
+    follower = models.CharField(max_length=100) #! username of person following another user
+    user = models.CharField(max_length=200) #! The person being followed
+
+    def __str__(self) -> str:
+        return self.user

@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 
 from django.contrib.auth.decorators import login_required
 
-from . models import Profile, Post, LikePost
+from . models import Profile, Post, LikePost, FollowersCount
 
 from django.contrib import messages #! for flash messages
 from django.http import HttpResponse
@@ -115,11 +115,42 @@ def profile(request, pk):
     user_posts = Post.objects.filter(user=pk)
     user_posts_len = len(user_posts)
 
+    follower = request.user.username
+    user = pk
+
+    if FollowersCount.objects.filter(follower=follower, user=user).first():
+        button_text = 'Unfollow'
+    else:
+        button_text = 'Follow'
+
+    user_followers = len(FollowersCount.objects.filter(user=pk))
+    user_following = len(FollowersCount.objects.filter(follower=pk))
+
     context = {
         'user_object': user_object, 'user_posts': user_posts, 
-        'user_posts_len': user_posts_len, 'user_profile': user_profile
+        'user_posts_len': user_posts_len, 'user_profile': user_profile,
+        'button_text': button_text, 'user_followers': user_followers,
+        'user_following': user_following
     }
     return render(request, 'profile.html', context)
+
+@login_required(login_url='signin')
+def follow(request):
+    
+    if request.method == 'POST':
+        follower = request.POST.get('follower')
+        user = request.POST.get('user')
+
+        if FollowersCount.objects.filter(follower=follower, user=user).first():
+            delete_follower = FollowersCount.objects.get(follower=follower, user=user)
+            delete_follower.delete()
+            return redirect('profile/'+user)
+        else:
+            new_follower = FollowersCount.objects.create(follower=follower, user=user)
+            new_follower.save()
+            return redirect('profile/'+user)
+    else:
+        return redirect('/')
 
 @login_required(login_url='signin')
 def upload(request):

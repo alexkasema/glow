@@ -15,4 +15,6 @@ urlpatterns = [
     path('upload', views.upload, name="upload"),
 
     path('like-post/<str:id>', views.like_post, name="like-post"),
+
+    path('follow', views.follow, name="follow"),
 ]

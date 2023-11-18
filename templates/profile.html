@@ -27,15 +27,23 @@
 	<section>
 			<div class="feature-photo">
 				<figure><img src="{% static 'images/resources/timeline-1.jpg' %}" alt=""></figure>
-				<form>
+				<form action="/follow" method="post">
+					{% csrf_token %}
 					<div class="add-btn">
 					<span style="color: white; font-size: 27px; margin-right: 520px;"><b><u><a href="/">Home</a></u></b></span>
 					
 					<span style="color: white; font-size: 27px;"><b>{{user_posts_len}} Posts</b></span>
-					<span style="color: white; font-size: 27px;"><b>1.7m followers</b></span>
-					<span style="color: white; font-size: 27px;"><b>3.5k following</b></span>
-					<a href="" title="" data-ripple=""><button style="background-color: #ffc0cb; border: #ffc0cb;">Follow</button></a>
-					
+					<span style="color: white; font-size: 27px;"><b>{{user_followers}} followers</b></span>
+					<span style="color: white; font-size: 27px;"><b>{{user_following}} following</b></span>
+
+					<input type="hidden" name="follower" value="{{request.user.username}}">
+					<input type="hidden" name="user" value="{{user_object.username}}">
+
+					{% if user_object.username == request.user.username %}
+					<a href="{% url 'settings' %}" title="" data-ripple="">Account Settings</a>
+					{% else %}
+						<a href="" title="" data-ripple=""><button type="submit" style="background-color: #ffc0cb; border: #ffc0cb;">{{button_text}}</button></a>
+					{% endif %}
 					</div>
 				</form>
 
@@ -148,7 +156,7 @@
 
 	
 	
-	<script data-cfasync="false" src="{% static '../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js' %}"></script><script src="js/main.min.js"></script>
+	<script data-cfasync="false" src="{% static '../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js' %}"></script><script src=" {% static 'js/main.min.js' %}"></script>
 	<script src="{% static 'js/script.js' %}"></script>
 
 </body>	
